@@ -20,11 +20,13 @@ namespace Chroma
 			    const SpinMatrix& T, const SpinMatrix& sp) 
     {
 #if QDP_NC == 3
-
       LatticePropagator di_quark = quarkContract13(quark_propagator_1 * sp,
 						   sp * quark_propagator_2);
       return LatticeComplex(trace(T * traceColor(quark_propagator_2 * traceSpin(di_quark)))
 			    + trace(T * traceColor(quark_propagator_2 * di_quark)));
+#else 
+      LatticeComplex dummy;
+      return dummy;
 #endif
     }
 	      
@@ -41,6 +43,9 @@ namespace Chroma
 						   sp * quark_propagator_2);
       return LatticeComplex(trace(T * traceColor(quark_propagator_1 * traceSpin(di_quark)))
 			    + trace(T * traceColor(quark_propagator_1 * di_quark)));
+#else 
+      LatticeComplex dummy;
+      return dummy;
 #endif
     }
 	      
@@ -65,6 +70,9 @@ namespace Chroma
       b_prop += trace(T * traceColor(quark_propagator_2 * di_quark));
 
       return b_prop;
+#else 
+      LatticeComplex dummy;
+      return dummy;
 #endif
     }
 
@@ -80,6 +88,9 @@ namespace Chroma
       LatticePropagator di_quark = quarkContract13(quark_propagator_2 * sp,
 						   sp * quark_propagator_2);
       return LatticeComplex(trace(T * traceColor(quark_propagator_1 * traceSpin(di_quark))));
+#else 
+      LatticeComplex dummy;
+      return dummy;
 #endif
     }
 
@@ -108,6 +119,9 @@ namespace Chroma
       b_prop += trace(T * traceColor(quark_propagator_1 * traceSpin(di_quark)));
 
       return b_prop;
+#else 
+      LatticeComplex dummy;
+      return dummy;
 #endif
     }
 
@@ -135,6 +149,9 @@ namespace Chroma
       b_prop *= 2;
       b_prop += trace(T * traceColor(quark_propagator_1 * traceSpin(di_quark)));
       return b_prop;
+#else 
+      LatticeComplex dummy;
+      return dummy;
 #endif
     }
 
