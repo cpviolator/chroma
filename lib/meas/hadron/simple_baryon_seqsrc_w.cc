@@ -456,6 +456,9 @@ namespace Chroma
 
       return projectBaryon(src_prop_tmp,
 			   forward_headers);
+#else
+      LatticePropagator dummy;
+      return dummy;
 #endif
 
     }
