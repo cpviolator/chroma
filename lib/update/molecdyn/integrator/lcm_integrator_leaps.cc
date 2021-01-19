@@ -113,7 +113,7 @@ namespace Chroma
 	tmp_1 = real_step_size[mu]*(s.getP())[mu];
 	
 	// tmp_1 = exp(dt*p[mu])  
-	if(QUDA_NC != 3) expmat(tmp_1, EXP_TWELFTH_ORDER);
+	if(QDP_NC != 3) expmat(tmp_1, EXP_TWELFTH_ORDER);
 	else expmat(tmp_1, EXP_EXACT);
 	
 	// tmp_2 = exp(dt*p[mu]) u[mu] = tmp_1 * u[mu]
