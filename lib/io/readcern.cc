@@ -222,93 +222,97 @@ void pokeCernLinks(const double *rdbuf, int lcbz, int linkdbles, multi1d<int>& c
 
 void readCERN(multi1d<LatticeColorMatrix>& u, const std::string& cfg_file)
 {
- if ((sizeof(int)!=4)||(sizeof(double)!=8)){
-   QDPIO::cout << "CERN files contain 4-byte ints, 8-byte doubles"<<std::endl;
-   QDP_abort(1);}
- if (QDP::Nc!=3){
-   QDPIO::cout << "readCERN only supports Nc=3"<<std::endl;
-   QDP_abort(1);}
- if (QDP::Nd!=4){
-   QDPIO::cout << "readCERN only supported for 4 space-time dimensions"<<std::endl;
-   QDP_abort(1);}
-
- int NT = QDP::Layout::lattSize()[3];
- int NZ = QDP::Layout::lattSize()[2];
- int NY = QDP::Layout::lattSize()[1];
- int NX = QDP::Layout::lattSize()[0];
- if (NZ%2){
+#if (QDP_NC == 3)
+  if ((sizeof(int)!=4)||(sizeof(double)!=8)){
+    QDPIO::cout << "CERN files contain 4-byte ints, 8-byte doubles"<<std::endl;
+    QDP_abort(1);}
+  if (QDP::Nc!=3){
+    QDPIO::cout << "readCERN only supports Nc=3"<<std::endl;
+    QDP_abort(1);}
+  if (QDP::Nd!=4){
+    QDPIO::cout << "readCERN only supported for 4 space-time dimensions"<<std::endl;
+    QDP_abort(1);}
+  
+  int NT = QDP::Layout::lattSize()[3];
+  int NZ = QDP::Layout::lattSize()[2];
+  int NY = QDP::Layout::lattSize()[1];
+  int NX = QDP::Layout::lattSize()[0];
+  if (NZ%2){
     QDPIO::cout << "NZ must be even"<<endl;
     QDP_abort(1); }
-   
- QDPIO::cout <<std::endl<< "Beginning read of CERN gauge field ("<<NX<<" x "<<NY
-             <<" x "<<NZ<<" ) x "<<NT<<std::endl;
- StopWatch rtimer; rtimer.start(); 
- StopWatch iotimer;
- StopWatch cmtimer;
   
- //  CERN field always stored as little endian
- iotimer.start();
- BinaryFileReader fin(cfg_file);
- int Ncern[4]; 
- fin.readArrayLittleEndian((char*)&Ncern[0],sizeof(int),4);  // assumes little endian, no checksums
- iotimer.stop();
- 
- if ((Ncern[0]!=NT)||(Ncern[1]!=NX)||(Ncern[2]!=NY)||(Ncern[3]!=NZ)){
-   QDPIO::cout << "readCERN: Lattice size mismatch " << std::endl;
-   QDPIO::cout << "read "<<Ncern[1]<<" "<<Ncern[2]<<" "<<Ncern[3]
-               <<" "<<Ncern[0]<<std::endl;
-   QDPIO::cout << "Chroma wants "<<NX<<" "<<NY<<" "<<NZ<<" "<<NT<<std::endl;
-   QDP_abort(1); }
- double plaq;
- iotimer.start();
- fin.readArrayLittleEndian((char*)&plaq,sizeof(double),1);
- iotimer.stop();
- plaq/=3.0;
-
- multi1d<int> gridsize=Layout::subgridLattSize();
- int LZ=gridsize[2];
- size_t dbsize=sizeof(double);
- size_t linkdbles=2*QDP::Nc*QDP::Nc;
- size_t rdlinks=4*NZ;   // This is 8 directions *  (NZ/2) odd sites in the z-direction; NZ must be even
- size_t rdsize=rdlinks*linkdbles;
- vector<double> rdbuf(rdsize);
- 
- multi1d<int> coord(QDP::Nd);
- for (int it=0;it<NT;it++){
-   coord[3]=it;
-   for (int ix=0;ix<NX;ix++){
-     coord[0]=ix;
-     for (int iy=0;iy<NY;iy++){
-       coord[1]=iy;
-	    // read entire z on primary
-       iotimer.start();
-       fin.readArrayPrimaryNodeLittleEndian((char*)&rdbuf[0],dbsize,rdsize);
-       iotimer.stop();
-
-       int izstart=((it+ix+iy)%2)?0:1;
-       int zshift=0;
-       int zz=0;
-       if (LZ%2){   // careful if LZ is odd
+  QDPIO::cout <<std::endl<< "Beginning read of CERN gauge field ("<<NX<<" x "<<NY
+	      <<" x "<<NZ<<" ) x "<<NT<<std::endl;
+  StopWatch rtimer; rtimer.start(); 
+  StopWatch iotimer;
+  StopWatch cmtimer;
+  
+  //  CERN field always stored as little endian
+  iotimer.start();
+  BinaryFileReader fin(cfg_file);
+  int Ncern[4]; 
+  fin.readArrayLittleEndian((char*)&Ncern[0],sizeof(int),4);  // assumes little endian, no checksums
+  iotimer.stop();
+  
+  if ((Ncern[0]!=NT)||(Ncern[1]!=NX)||(Ncern[2]!=NY)||(Ncern[3]!=NZ)){
+    QDPIO::cout << "readCERN: Lattice size mismatch " << std::endl;
+    QDPIO::cout << "read "<<Ncern[1]<<" "<<Ncern[2]<<" "<<Ncern[3]
+		<<" "<<Ncern[0]<<std::endl;
+    QDPIO::cout << "Chroma wants "<<NX<<" "<<NY<<" "<<NZ<<" "<<NT<<std::endl;
+    QDP_abort(1); }
+  double plaq;
+  iotimer.start();
+  fin.readArrayLittleEndian((char*)&plaq,sizeof(double),1);
+  iotimer.stop();
+  plaq/=3.0;
+  
+  multi1d<int> gridsize=Layout::subgridLattSize();
+  int LZ=gridsize[2];
+  size_t dbsize=sizeof(double);
+  size_t linkdbles=2*QDP::Nc*QDP::Nc;
+  size_t rdlinks=4*NZ;   // This is 8 directions *  (NZ/2) odd sites in the z-direction; NZ must be even
+  size_t rdsize=rdlinks*linkdbles;
+  vector<double> rdbuf(rdsize);
+  
+  multi1d<int> coord(QDP::Nd);
+  for (int it=0;it<NT;it++){
+    coord[3]=it;
+    for (int ix=0;ix<NX;ix++){
+      coord[0]=ix;
+      for (int iy=0;iy<NY;iy++){
+	coord[1]=iy;
+	// read entire z on primary
+	iotimer.start();
+	fin.readArrayPrimaryNodeLittleEndian((char*)&rdbuf[0],dbsize,rdsize);
+	iotimer.stop();
+	
+	int izstart=((it+ix+iy)%2)?0:1;
+	int zshift=0;
+	int zz=0;
+	if (LZ%2){   // careful if LZ is odd
           zz=(izstart)?1:-1;
-          }
-       for (int iz=izstart;iz<NZ;iz+=LZ+zz){
+	}
+	for (int iz=izstart;iz<NZ;iz+=LZ+zz){
           int lcbz=(LZ-zz)/2;
           coord[2]=iz;
           pokeCernLinks(&rdbuf[zshift],lcbz,linkdbles,coord,NX,NY,NZ,NT,u,cmtimer);
           zshift+=8*lcbz*linkdbles;
           if (zz!=0) zz=-zz;
-          }}}}
- 
- rtimer.stop();
- QDPIO::cout << "readCERN:       plaq read: " << plaq << std::endl;
- Double w_plaq,s_plaq,t_plaq,link;
- MesPlq(u, w_plaq, s_plaq, t_plaq,link);  
- QDPIO::cout << "readCERN: plaq recomputed: " << w_plaq << std::endl;
- QDPIO::cout << "Read of CERN gauge field done in "<<rtimer.getTimeInSeconds()<<" seconds"<<std::endl;
- QDPIO::cout << "Time of IO operations = "<<iotimer.getTimeInSeconds()<<" seconds"<<std::endl;
- QDPIO::cout << "Time of communications = "<<cmtimer.getTimeInSeconds()<<" seconds"<<std::endl<<std::endl;
+	}}}}
+  
+  rtimer.stop();
+  QDPIO::cout << "readCERN:       plaq read: " << plaq << std::endl;
+  Double w_plaq,s_plaq,t_plaq,link;
+  MesPlq(u, w_plaq, s_plaq, t_plaq,link);  
+  QDPIO::cout << "readCERN: plaq recomputed: " << w_plaq << std::endl;
+  QDPIO::cout << "Read of CERN gauge field done in "<<rtimer.getTimeInSeconds()<<" seconds"<<std::endl;
+  QDPIO::cout << "Time of IO operations = "<<iotimer.getTimeInSeconds()<<" seconds"<<std::endl;
+  QDPIO::cout << "Time of communications = "<<cmtimer.getTimeInSeconds()<<" seconds"<<std::endl<<std::endl;
 #if  defined(ARCH_PARSCALAR) || defined(ARCH_PARSCALARVEC)
- QMP_barrier();
+  QMP_barrier();
+#endif
+#else
+#warning "Omitting compilation of readCERN"
 #endif
 }
 

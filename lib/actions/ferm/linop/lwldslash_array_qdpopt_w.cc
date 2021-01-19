@@ -250,7 +250,7 @@ namespace Chroma
 
     getFermBC().modifyF(chi, QDP::rb[cb]);
 #else
-    QDPIO::cerr<<"lwldslash_array_qdpopt_w: not implemented for NC!=3\n";
+    QDPIO::cerr<<"lwldslash_array_qdpopt_w: not implemented for NC!=2,3,4\n";
     QDP_abort(13) ;
 #endif
 

@@ -229,7 +229,7 @@ namespace Chroma
 			  enum PlusMinus isign, int cb) const
   {
     START_CODE();
-#if (QDP_NC == 2) || (QDP_NC == 3)
+#if (QDP_NC == 2) || (QDP_NC == 3) || (QDP_NC == 4)
     /*     F 
      *   a2  (x)  :=  U  (x) (1 - isign gamma  ) psi(x)
      *     mu          mu                    mu
@@ -296,7 +296,7 @@ namespace Chroma
 
     QDPWilsonDslashT<T,P,Q>::getFermBC().modifyF(chi, QDP::rb[cb]);
 #else
-    QDPIO::cerr<<"lwldslash_w: not implemented for NC!=3\n";
+    QDPIO::cerr<<"lwldslash_w: not implemented for NC!=3,4\n";
     QDP_abort(13) ;
 #endif
     END_CODE();
