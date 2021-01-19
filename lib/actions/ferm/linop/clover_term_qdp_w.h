@@ -1602,7 +1602,6 @@ namespace Chroma
 
 #endif
 #if 1
-#warning "Using unrolled, Nc agnostic clover term"
 	  // Rolled version
 	  for(int i = 0; i < n; ++i) {
 #ifndef NEW
