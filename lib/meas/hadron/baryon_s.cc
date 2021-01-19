@@ -126,12 +126,12 @@ namespace Chroma {
 
 
     /* Sum over second sink u-quark colour */
-    for(cf_3 = 0;cf_3  < ( Nc); ++cf_3 )
+    for(cf_3 = 0;cf_3  < (3); ++cf_3 )
     {
 
       /* Sum over sink d-u diquark colour */
-      for(cf_1 = 0;cf_1  < ( Nc); ++cf_1 )
-	for(cf_2 = 0;cf_2  < ( Nc); ++cf_2 )
+      for(cf_1 = 0;cf_1  < (3); ++cf_1 )
+	for(cf_2 = 0;cf_2  < (3); ++cf_2 )
 	{
 	  tmp = antisym_tensor[cf_3][cf_2][cf_1];
 	  if(tmp != 0)            /* otherwise no contribution! */
@@ -264,12 +264,12 @@ namespace Chroma {
 
 
     /* Sum over second sink u-quark colour */
-    for(cf_3 = 0;cf_3  < ( Nc); ++cf_3 )
+    for(cf_3 = 0;cf_3  < (3); ++cf_3 )
     {
 
       /* Sum over sink d-u diquark colour */
-      for(cf_1 = 0;cf_1  < ( Nc); ++cf_1 )
-	for(cf_2 = 0;cf_2  < ( Nc); ++cf_2 )
+      for(cf_1 = 0;cf_1  < (3); ++cf_1 )
+	for(cf_2 = 0;cf_2  < (3); ++cf_2 )
 	{
 	  tmp = antisym_tensor[cf_3][cf_2][cf_1];
 	  if(tmp != 0)            /* otherwise no contribution! */
@@ -437,16 +437,16 @@ namespace Chroma {
     c = 1;
 
     int total = 0 ;
-    for(ci_3= 0;ci_3 < Nc; ++ci_3)
-      for(ci_1= 0;ci_1 < Nc; ++ci_1)
-	for(ci_2= 0;ci_2 < Nc; ++ci_2)
+    for(ci_3= 0;ci_3 < 3; ++ci_3)
+      for(ci_1= 0;ci_1 < 3; ++ci_1)
+	for(ci_2= 0;ci_2 < 3; ++ci_2)
 	  {
 
 	    /* Sum over second sink u-quark colour */
-	    for(cf_3 = 0;cf_3  < ( Nc); ++cf_3 )
+	    for(cf_3 = 0;cf_3  < ( 3); ++cf_3 )
 	      {
-		for(cf_1 = 0;cf_1  < ( Nc); ++cf_1 )
-		  for(cf_2 = 0;cf_2  < ( Nc); ++cf_2 )
+		for(cf_1 = 0;cf_1  < ( 3); ++cf_1 )
+		  for(cf_2 = 0;cf_2  < ( 3); ++cf_2 )
 		    {
 		      tmp = 
 			antisym_tensor[cf_3][cf_2][cf_1] *
